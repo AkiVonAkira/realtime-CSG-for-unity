@@ -25,23 +25,8 @@ namespace RealtimeCSG
 		
 		public static FilteredSelection	FilteredSelection	{ get { InitTools(); return instance.filteredSelection; } }
 		public static IEditMode			ActiveTool			{ get { InitTools(); return instance.activeTool; } }
-
-
-		 Action<ToolEditMode> onEditModeChanged;
-
-		public static Action<ToolEditMode> OnEditModeChanged
-		{
-			get {
-				InitTools();
-				return instance.onEditModeChanged;
-			}
-			set 
-			{
-				InitTools();
-				instance.onEditModeChanged = value;
-			}
-		}
-
+			
+		
 		public static ToolEditMode EditMode
 		{
 			get
@@ -53,9 +38,6 @@ namespace RealtimeCSG
 			{
 				if (instance.editMode == value)
 					return;
-
-				if(OnEditModeChanged != null)
-					OnEditModeChanged(value);
 
 				Undo.RecordObject(instance, "Changed edit mode");
 

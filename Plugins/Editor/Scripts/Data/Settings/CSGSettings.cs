@@ -301,7 +301,6 @@ namespace RealtimeCSG
         internal static ShapeMode			ShapeBuildMode	= ShapeMode.Box;
 
 
-        public static Action<bool> OnRealtimeCSGEnabledChanged;
         static public void SetRealtimeCSGEnabled(bool isEnabled)
         {
             RealtimeCSG.CSGSettings.EnableRealtimeCSG = isEnabled;
@@ -314,8 +313,6 @@ namespace RealtimeCSG
             EditModeManager.UpdateTool();
             RealtimeCSG.CSGSettings.UpdateWireframeModes();
             RealtimeCSG.CSGSettings.Save();
-            if(OnRealtimeCSGEnabledChanged != null)
-                OnRealtimeCSGEnabledChanged(CSGSettings.EnableRealtimeCSG);
         }
 
 
