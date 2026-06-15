@@ -30,15 +30,31 @@ namespace RealtimeCSG
 			return editModeBounds.height;
 		}
 
-		static GUIStyle sceneViewOverlayTransparentBackground = "SceneViewOverlayTransparentBackground";
+		static GUIStyle sceneViewOverlayTransparentBackground;
 		static GUI.WindowFunction windowFunction = new GUI.WindowFunction(EditModeSelectionGUI.HandleSceneGUI);
+
+		internal static void ResetCachedGuiStyles()
+		{
+			sceneViewOverlayTransparentBackground = null;
+		}
+
+		static GUIStyle SceneViewOverlayTransparentBackground
+		{
+			get
+			{
+				if (sceneViewOverlayTransparentBackground == null)
+					sceneViewOverlayTransparentBackground = "SceneViewOverlayTransparentBackground";
+
+				return sceneViewOverlayTransparentBackground;
+			}
+		}
 		
 		public static void HandleWindowGUI(Rect windowRect)
 		{
 			GUILayout.Window(SceneViewBrushEditorOverlayHash,
 						windowRect,
 						windowFunction,
-						string.Empty, sceneViewOverlayTransparentBackground,
+						string.Empty, SceneViewOverlayTransparentBackground,
 						CSG_GUIStyleUtility.ContentEmpty);
 		}
 

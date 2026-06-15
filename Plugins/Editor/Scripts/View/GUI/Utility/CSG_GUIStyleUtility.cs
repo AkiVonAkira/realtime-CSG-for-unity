@@ -318,6 +318,9 @@ namespace RealtimeCSG
 			if (stylesInitialized)
 				return;
 
+			if (Event.current == null)
+				return;
+
 			var oldSkin = GUI.skin;
 			stylesInitialized = true;
 			SetDefaultGUISkin();
@@ -655,6 +658,9 @@ namespace RealtimeCSG
 
 		public static GUIStyle GetStyle(string styleName)
 		{
+			if (Event.current == null)
+				return GUIStyle.none;
+
 			GUIStyle s = GUI.skin.FindStyle(styleName);
 			if (s == null)
 			{
@@ -664,6 +670,32 @@ namespace RealtimeCSG
 				GUI.skin = oldSkin;
 			}
 			return s;
+		}
+
+		public static void ResetCachedStyles()
+		{
+			stylesInitialized = false;
+
+			BottomToolBarStyle = null;
+			emptyMaterialStyle = null;
+			unselectedIconLabelStyle = null;
+			selectedIconLabelStyle = null;
+			selectionRectStyle = null;
+			redTextArea = null;
+			redTextLabel = null;
+			redButton = null;
+			wrapLabel = null;
+			versionLabelStyle = null;
+			toolTipTitleStyle = null;
+			toolTipContentsStyle = null;
+			toolTipKeycodesStyle = null;
+			sceneTextLabel = null;
+			rightAlignedLabel = null;
+			unpaddedWindow = null;
+			winBtnClose = null;
+
+			Pro = new CSG_Skin();
+			Personal = new CSG_Skin();
 		}
 
 
