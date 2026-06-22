@@ -369,23 +369,7 @@ namespace RealtimeCSG
 
 			selectionRectStyle = GetStyle("selectionRect");
 
-			winBtnClose = new GUIStyle(EditorStyles.toolbarSearchCancelButton);
-			var closeIcon = Resources.Load<Texture2D>("GUI/WinBtnClose");
-			if (closeIcon != null)
-				winBtnClose.normal.background = closeIcon;
-			winBtnClose.onActive.background =
-			winBtnClose.onFocused.background =
-			winBtnClose.onNormal.background =
-			winBtnClose.onHover.background =
-			winBtnClose.hover.background =
-			winBtnClose.focused.background =
-			winBtnClose.active.background = null;
-			winBtnClose.fixedHeight = 16f;
-			winBtnClose.fixedWidth = 16f;
-			winBtnClose.overflow.bottom = 0;
-			winBtnClose.overflow.top = 0;
-			winBtnClose.overflow.right = 0;
-			winBtnClose.overflow.left = 0;
+			winBtnClose = CreateWinBtnCloseStyle();
 
 			var redToolbarDropDown = GetStyle("toolbarDropDown");
 
@@ -686,6 +670,34 @@ namespace RealtimeCSG
 				GUI.skin = oldSkin;
 			}
 			return s;
+		}
+
+		static GUIStyle CreateWinBtnCloseStyle()
+		{
+			GUIStyle basis = GetStyle("ToolbarSearchCancelButton");
+			if (basis == null || basis == GUIStyle.none)
+				basis = GetStyle("ButtonRight");
+			if (basis == null || basis == GUIStyle.none)
+				basis = EditorStyles.toolbarButton;
+
+			var style = new GUIStyle(basis);
+			var closeIcon = Resources.Load<Texture2D>("GUI/WinBtnClose");
+			if (closeIcon != null)
+				style.normal.background = closeIcon;
+			style.onActive.background =
+			style.onFocused.background =
+			style.onNormal.background =
+			style.onHover.background =
+			style.hover.background =
+			style.focused.background =
+			style.active.background = null;
+			style.fixedHeight = 16f;
+			style.fixedWidth = 16f;
+			style.overflow.bottom = 0;
+			style.overflow.top = 0;
+			style.overflow.right = 0;
+			style.overflow.left = 0;
+			return style;
 		}
 
 		public static void ResetCachedStyles()
