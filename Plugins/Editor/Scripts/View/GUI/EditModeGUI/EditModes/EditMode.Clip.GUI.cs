@@ -86,6 +86,8 @@ namespace RealtimeCSG
 				if (doCommit) tool.Commit();	// unity bug workaround
 				if (doCancel) tool.Cancel();	// unity bug workaround
 			}
+
+			CSG_GUIStyleUtility.RestoreGUIState();
 		}
 
 		static void OnGUIContents(bool isSceneGUI, EditModeClip tool)

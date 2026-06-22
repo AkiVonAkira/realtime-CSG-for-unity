@@ -69,6 +69,7 @@ namespace RealtimeCSG
 			}
 			GUILayout.EndHorizontal();			
 			tool.CurrentGenerator.FinishGUI();
+			CSG_GUIStyleUtility.RestoreGUIState();
 			return true;
 		}
 

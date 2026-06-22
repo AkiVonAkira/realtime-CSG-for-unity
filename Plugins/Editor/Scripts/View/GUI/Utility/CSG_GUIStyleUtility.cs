@@ -616,9 +616,15 @@ namespace RealtimeCSG
 			GUI.skin = oldSkin;
 		}
 
+		static GUISkin _savedGuiSkin;
+
 		public static void ResetGUIState()
 		{
-			GUI.skin = null;
+			if (Event.current == null)
+				return;
+
+			_savedGuiSkin = GUI.skin;
+
 			Color white = Color.white;
 			GUI.contentColor = white;
 			GUI.backgroundColor = white;
@@ -626,19 +632,27 @@ namespace RealtimeCSG
 			GUI.enabled = true;
 			GUI.changed = false;
 			EditorGUI.indentLevel = 0;
-			//EditorGUI.ClearStacks();
 			EditorGUIUtility.fieldWidth = 0f;
 			EditorGUIUtility.labelWidth = 0f;
-			//EditorGUIUtility.SetBoldDefaultFont(false);
-			//EditorGUIUtility.UnlockContextWidth();
 			EditorGUIUtility.hierarchyMode = false;
 			EditorGUIUtility.wideMode = false;
-			//ScriptAttributeUtility.propertyHandlerCache = null;
 			SetDefaultGUISkin();
+		}
+
+		public static void RestoreGUIState()
+		{
+			if (_savedGuiSkin == null)
+				return;
+
+			GUI.skin = _savedGuiSkin;
+			_savedGuiSkin = null;
 		}
 
 		public static void SetDefaultGUISkin()
 		{
+			if (Event.current == null)
+				return;
+
 			if (EditorGUIUtility.isProSkin)
 				GUI.skin = EditorGUIUtility.GetBuiltinSkin(EditorSkin.Scene);
 			else
@@ -698,6 +712,7 @@ namespace RealtimeCSG
 
 			Pro = new CSG_Skin();
 			Personal = new CSG_Skin();
+			_savedGuiSkin = null;
 		}
 
 

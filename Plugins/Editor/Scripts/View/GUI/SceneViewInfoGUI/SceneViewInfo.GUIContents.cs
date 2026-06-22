@@ -42,6 +42,12 @@ namespace RealtimeCSG
             }
         }
 
+        internal static void ResetCachedGuiStyles()
+        {
+            infoGUIStyle = null;
+            infoGUIBGStyle = null;
+        }
+
         private static void InitStyles( SceneView sceneView )
         {
             if ( Event.current == null )

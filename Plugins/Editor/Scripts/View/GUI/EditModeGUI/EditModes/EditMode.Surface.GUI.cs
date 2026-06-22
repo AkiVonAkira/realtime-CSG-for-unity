@@ -1095,6 +1095,8 @@ namespace RealtimeCSG
 				case EventType.MouseDrag:	{ if (GUIUtility.hotControl == windowControlID) { Event.current.Use(); } break; }
 				case EventType.ScrollWheel: { if (boxArea.Contains(Event.current.mousePosition)) { Event.current.Use(); } break; }
 			}
+
+			CSG_GUIStyleUtility.RestoreGUIState();
 		}
 
 		public static void OnInspectorGUI(EditorWindow window, float height)

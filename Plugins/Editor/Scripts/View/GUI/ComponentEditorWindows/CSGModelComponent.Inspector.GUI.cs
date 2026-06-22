@@ -160,6 +160,9 @@ namespace RealtimeCSG
             InitReflection();
             if (!localStyles && Event.current != null)
             {
+                if (Event.current == null)
+                    return;
+
                 popupStyle = new GUIStyle(EditorStyles.popup);
                 //popupStyle.padding.top += 2;
                 popupStyle.margin.top += 2;

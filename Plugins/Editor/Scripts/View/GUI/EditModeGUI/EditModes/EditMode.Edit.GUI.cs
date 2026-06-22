@@ -67,6 +67,7 @@ namespace RealtimeCSG
 				GUILayout.FlexibleSpace();
 			}
 			GUILayout.EndHorizontal();
+			CSG_GUIStyleUtility.RestoreGUIState();
 		}
 
 		public static void OnInspectorGUI(EditorWindow window, float height)
