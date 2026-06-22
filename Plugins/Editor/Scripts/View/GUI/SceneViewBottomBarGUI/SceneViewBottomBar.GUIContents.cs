@@ -71,9 +71,19 @@ namespace RealtimeCSG
 
 		static bool localStyles = false;
 
+		internal static void ResetCachedGuiStyles()
+		{
+			localStyles = false;
+			miniTextStyle = null;
+			textInputStyle = null;
+		}
+
 		static void InitStyles()
 		{
 			if (localStyles)
+				return;
+
+			if (Event.current == null)
 				return;
 			
 			miniTextStyle = new GUIStyle(EditorStyles.miniLabel);

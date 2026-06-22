@@ -42,8 +42,16 @@ namespace RealtimeCSG
 		{
 			get
 			{
+				if (Event.current == null)
+					return GUIStyle.none;
+
 				if (sceneViewOverlayTransparentBackground == null)
-					sceneViewOverlayTransparentBackground = "SceneViewOverlayTransparentBackground";
+				{
+					var found = GUI.skin.FindStyle("SceneViewOverlayTransparentBackground");
+					sceneViewOverlayTransparentBackground = found != null
+						? new GUIStyle(found)
+						: new GUIStyle(EditorStyles.helpBox);
+				}
 
 				return sceneViewOverlayTransparentBackground;
 			}

@@ -14,6 +14,9 @@ namespace RealtimeCSG
 		{
 			CSG_GUIStyleUtility.ResetCachedStyles();
 			EditModeSelectionGUI.ResetCachedGuiStyles();
+			SceneViewBottomBarGUI.ResetCachedGuiStyles();
+			SceneViewInfoGUI.ResetCachedGuiStyles();
+			CSGModelComponentInspectorGUI.ResetCachedGuiStyles();
 		}
 	}
 }

@@ -148,11 +148,17 @@ namespace RealtimeCSG
 
         static Material dummyMaterial;
         static bool localStyles = false;
+
+        internal static void ResetCachedGuiStyles()
+        {
+            localStyles = false;
+            popupStyle = null;
+        }
         
         public static void OnInspectorGUI(UnityEngine.Object[] targets)
         {
             InitReflection();
-            if (!localStyles)
+            if (!localStyles && Event.current != null)
             {
                 popupStyle = new GUIStyle(EditorStyles.popup);
                 //popupStyle.padding.top += 2;

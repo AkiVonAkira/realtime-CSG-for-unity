@@ -369,8 +369,10 @@ namespace RealtimeCSG
 
 			selectionRectStyle = GetStyle("selectionRect");
 
-			winBtnClose = new GUIStyle(GUI.skin.verticalScrollbarUpButton);
-			winBtnClose.normal.background = Resources.Load<Texture2D>("GUI/WinBtnClose");
+			winBtnClose = new GUIStyle(EditorStyles.toolbarSearchCancelButton);
+			var closeIcon = Resources.Load<Texture2D>("GUI/WinBtnClose");
+			if (closeIcon != null)
+				winBtnClose.normal.background = closeIcon;
 			winBtnClose.onActive.background =
 			winBtnClose.onFocused.background =
 			winBtnClose.onNormal.background =

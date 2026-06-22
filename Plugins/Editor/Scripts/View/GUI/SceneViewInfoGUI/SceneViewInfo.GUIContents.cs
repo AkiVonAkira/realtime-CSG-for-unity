@@ -20,8 +20,16 @@ namespace RealtimeCSG
         private static Rect      infoGUIRect;
         private static GUIStyle  infoGUIStyle;
         private static GUIStyle  infoGUIBGStyle;
+        private static bool      infoStylesInitialized;
         private const  float     infoGUILabelHeight = 34;
         private static Texture2D m_InfoGUIBGTex;
+
+        internal static void ResetCachedGuiStyles()
+        {
+            infoStylesInitialized = false;
+            infoGUIStyle = null;
+            infoGUIBGStyle = null;
+        }
 
         private static Texture2D InfoGUIBGTex
         {
@@ -36,6 +44,9 @@ namespace RealtimeCSG
 
         private static void InitStyles( SceneView sceneView )
         {
+            if ( Event.current == null )
+                return;
+
 #if UNITY_2018_3_OR_NEWER
             infoGUIRect.x = sceneView.rootVisualElement.contentRect.width - 116;
             infoGUIRect.y = sceneView.rootVisualElement.contentRect.height - 74;
@@ -47,7 +58,10 @@ namespace RealtimeCSG
             infoGUIRect.width  = 110;
             infoGUIRect.height = infoGUILabelHeight;
 
-            infoGUIStyle = new GUIStyle( "MiniLabel" )
+            if ( infoStylesInitialized )
+                return;
+
+            infoGUIStyle = new GUIStyle( EditorStyles.miniLabel )
             {
                 alignment = TextAnchor.UpperLeft,
                 normal = new GUIStyleState()
@@ -59,13 +73,15 @@ namespace RealtimeCSG
                 fontSize = 11
             };
 
-            infoGUIBGStyle = new GUIStyle( "box" )
+            infoGUIBGStyle = new GUIStyle( EditorStyles.helpBox )
             {
                 normal = new GUIStyleState()
                 {
                     background = InfoGUIBGTex
                 }
             };
+
+            infoStylesInitialized = true;
         }
     }
 }
