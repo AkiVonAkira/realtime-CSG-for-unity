@@ -1,55 +1,60 @@
 using System;
-using UnityEngine;
 using System.Collections.Generic;
-using RealtimeCSG.Components;
 using System.Linq;
-using UnityEngine.Serialization;
+using RealtimeCSG;
+using RealtimeCSG.Components;
 using RealtimeCSG.Foundation;
+using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace InternalRealtimeCSG
 {
-	[Serializable]
-	public enum RenderSurfaceType
-	{
-		Normal,
-		[FormerlySerializedAs("Discarded")] Hidden,	// manually hidden by user
-		[FormerlySerializedAs("Invisible")] Culled, // removed by CSG process
-		ShadowOnly,									// surface that casts shadows
-		Collider,
-		Trigger,
+    [Serializable]
+    public enum RenderSurfaceType
+    {
+        Normal,
 
-		CastShadows,								// surface that casts shadows
-		ReceiveShadows								// surface that receive shadows
-	}
+        [FormerlySerializedAs("Discarded")]
+        Hidden, // manually hidden by user
+
+        [FormerlySerializedAs("Invisible")]
+        Culled, // removed by CSG process
+        ShadowOnly, // surface that casts shadows
+        Collider,
+        Trigger,
+
+        CastShadows, // surface that casts shadows
+        ReceiveShadows, // surface that receive shadows
+    }
 
 #if UNITY_EDITOR
-	[Serializable]
-	public sealed class HelperSurfaceDescription
-	{
-		public Mesh						SharedMesh;
-		public RenderSurfaceType		RenderSurfaceType = (RenderSurfaceType)999;
-		public bool						HasGeneratedNormals;
-		public GeneratedMeshDescription MeshDescription;
-        public GameObject   GameObject;
-        public MeshFilter   MeshFilter;
-        public MeshRenderer MeshRenderer; 
+    [Serializable]
+    public sealed class HelperSurfaceDescription
+    {
+        public Mesh SharedMesh;
+        public RenderSurfaceType RenderSurfaceType = (RenderSurfaceType)999;
+        public bool HasGeneratedNormals;
+        public GeneratedMeshDescription MeshDescription;
+        public GameObject GameObject;
+        public MeshFilter MeshFilter;
+        public MeshRenderer MeshRenderer;
 
-		public MeshInstanceKey GenerateKey() 
-		{
-			return MeshInstanceKey.GenerateKey(MeshDescription);
-		}
+        public MeshInstanceKey GenerateKey()
+        {
+            return MeshInstanceKey.GenerateKey(MeshDescription);
+        }
 
-		public bool IsValid()
-		{
-			if (SharedMesh)
-			{
-				if (SharedMesh.vertexCount < 0)
-					return false;
-			} else
-			if (SharedMesh.GetInstanceID() != 0)
-				return false;
-			return true;
-		}
+        public bool IsValid()
+        {
+            if (SharedMesh)
+            {
+                if (SharedMesh.vertexCount < 0)
+                    return false;
+            }
+            else if (SharedMesh.ToNativeId() != 0)
+                return false;
+            return true;
+        }
 
         public void Destroy()
         {
@@ -62,28 +67,59 @@ namespace InternalRealtimeCSG
 #endif
 
     [DisallowMultipleComponent]
-	[ExecuteInEditMode]
-	[SelectionBase]
-	public sealed class GeneratedMeshes : MonoBehaviour
-	{
-		[HideInInspector] public float Version = 1.00f;
+    [ExecuteInEditMode]
+    [SelectionBase]
+    public sealed class GeneratedMeshes : MonoBehaviour
+    {
+        [HideInInspector]
+        public float Version = 1.00f;
+
 #if UNITY_EDITOR
-		public CSGModel				owner;
+        public CSGModel owner;
 
-		[NonSerialized] [HideInInspector] public Rigidbody		CachedRigidBody;
+        [NonSerialized]
+        [HideInInspector]
+        public Rigidbody CachedRigidBody;
 
-		[NonSerialized] private GeneratedMeshInstance[]         meshInstances;
-		[SerializeField] private HelperSurfaceDescription[]     helperSurfaces;
+        [NonSerialized]
+        private GeneratedMeshInstance[] meshInstances;
 
-        static readonly GeneratedMeshInstance[]    emptyMeshInstances   = new GeneratedMeshInstance[0];
-        static readonly HelperSurfaceDescription[] emptyHelperSurfaces  = new HelperSurfaceDescription[0];
+        [SerializeField]
+        private HelperSurfaceDescription[] helperSurfaces;
 
+        static readonly GeneratedMeshInstance[] emptyMeshInstances = new GeneratedMeshInstance[0];
+        static readonly HelperSurfaceDescription[] emptyHelperSurfaces =
+            new HelperSurfaceDescription[0];
 
-        public bool HasMeshInstances { get { return meshInstances != null && meshInstances.Length > 0; } }
-        public bool HasHelperSurfaces { get { return helperSurfaces != null && helperSurfaces.Length > 0; } }
+        public bool HasMeshInstances
+        {
+            get { return meshInstances != null && meshInstances.Length > 0; }
+        }
+        public bool HasHelperSurfaces
+        {
+            get { return helperSurfaces != null && helperSurfaces.Length > 0; }
+        }
 
-        public GeneratedMeshInstance[]      MeshInstances   {  get { if (meshInstances == null) return emptyMeshInstances; else return meshInstances; } }
-        public HelperSurfaceDescription[]   HelperSurfaces  {  get { if (helperSurfaces == null) return emptyHelperSurfaces; else return helperSurfaces; } }
+        public GeneratedMeshInstance[] MeshInstances
+        {
+            get
+            {
+                if (meshInstances == null)
+                    return emptyMeshInstances;
+                else
+                    return meshInstances;
+            }
+        }
+        public HelperSurfaceDescription[] HelperSurfaces
+        {
+            get
+            {
+                if (helperSurfaces == null)
+                    return emptyHelperSurfaces;
+                else
+                    return helperSurfaces;
+            }
+        }
 
         public HelperSurfaceDescription GetHelperSurface(MeshInstanceKey key)
         {
@@ -106,8 +142,7 @@ namespace InternalRealtimeCSG
             var key = instance.GenerateKey();
             for (int i = 0; i < helperSurfaces.Length; i++)
             {
-                if (helperSurfaces[i].SharedMesh &&
-                    helperSurfaces[i].GenerateKey() == key)
+                if (helperSurfaces[i].SharedMesh && helperSurfaces[i].GenerateKey() == key)
                 {
                     helperSurfaces[i].Destroy();
                     helperSurfaces[i] = instance;
@@ -129,7 +164,7 @@ namespace InternalRealtimeCSG
             }
             return null;
         }
-         
+
         public void AddMeshInstance(GeneratedMeshInstance instance)
         {
             if (!instance)
@@ -155,8 +190,7 @@ namespace InternalRealtimeCSG
 
         public void SetHelperSurfaces(HashSet<HelperSurfaceDescription> foundInstances)
         {
-            if (helperSurfaces != null &&
-                foundInstances.Count == helperSurfaces.Length)
+            if (helperSurfaces != null && foundInstances.Count == helperSurfaces.Length)
             {
                 bool differenceFound = false;
                 for (int i = 0; i < helperSurfaces.Length; i++)
@@ -180,8 +214,7 @@ namespace InternalRealtimeCSG
                 helperSurfaces = null;
                 return;
             }
-            if (helperSurfaces == null ||
-                foundInstances.Count != helperSurfaces.Length)
+            if (helperSurfaces == null || foundInstances.Count != helperSurfaces.Length)
                 helperSurfaces = new HelperSurfaceDescription[foundInstances.Count];
             {
                 int i = 0;
@@ -192,10 +225,10 @@ namespace InternalRealtimeCSG
                 }
             }
         }
+
         public void SetMeshInstances(HashSet<GeneratedMeshInstance> foundInstances)
         {
-            if (meshInstances != null &&
-                foundInstances.Count == meshInstances.Length)
+            if (meshInstances != null && foundInstances.Count == meshInstances.Length)
             {
                 bool differenceFound = false;
                 for (int i = 0; i < meshInstances.Length; i++)
@@ -214,8 +247,7 @@ namespace InternalRealtimeCSG
                 meshInstances = null;
                 return;
             }
-            if (meshInstances == null ||
-                foundInstances.Count != meshInstances.Length)
+            if (meshInstances == null || foundInstances.Count != meshInstances.Length)
                 meshInstances = new GeneratedMeshInstance[foundInstances.Count];
             {
                 int i = 0;
@@ -229,8 +261,7 @@ namespace InternalRealtimeCSG
 
         public void SetMeshInstances(List<GeneratedMeshInstance> foundInstances)
         {
-            if (meshInstances != null &&
-                foundInstances.Count == meshInstances.Length)
+            if (meshInstances != null && foundInstances.Count == meshInstances.Length)
             {
                 bool differenceFound = false;
                 for (int i = 0; i < meshInstances.Length; i++)
@@ -258,8 +289,7 @@ namespace InternalRealtimeCSG
                 meshInstances = null;
                 return;
             }
-            if (meshInstances == null ||
-                foundInstances.Count != meshInstances.Length)
+            if (meshInstances == null || foundInstances.Count != meshInstances.Length)
                 meshInstances = new GeneratedMeshInstance[foundInstances.Count];
             for (int i = 0; i < foundInstances.Count; i++)
                 meshInstances[i] = foundInstances[i];
@@ -289,44 +319,46 @@ namespace InternalRealtimeCSG
             meshInstances = oldInstances.ToArray();
         }
 
-        public bool HasMeshInstance(MeshInstanceKey key) { return GetMeshInstance(key) != null; }
-
+        public bool HasMeshInstance(MeshInstanceKey key)
+        {
+            return GetMeshInstance(key) != null;
+        }
 
         void Awake()
-		{
-			// cannot change visibility since this might have an effect on exporter
-			this.gameObject.hideFlags = HideFlags.None;
-			this.hideFlags = HideFlags.None;//HideFlags.DontSaveInBuild;
-			if (CSGSceneManagerRedirector.Interface != null)
-				CSGSceneManagerRedirector.Interface.OnCreated(this);
-		}
-        
-		void OnEnable()
-		{
+        {
+            // cannot change visibility since this might have an effect on exporter
+            this.gameObject.hideFlags = HideFlags.None;
+            this.hideFlags = HideFlags.None; //HideFlags.DontSaveInBuild;
+            if (CSGSceneManagerRedirector.Interface != null)
+                CSGSceneManagerRedirector.Interface.OnCreated(this);
+        }
+
+        void OnEnable()
+        {
             meshInstances = this.GetComponentsInChildren<GeneratedMeshInstance>();
         }
 
-		void OnDestroy()
-		{
-			if (CSGSceneManagerRedirector.Interface != null)
-				CSGSceneManagerRedirector.Interface.OnDestroyed(this);
-		}
+        void OnDestroy()
+        {
+            if (CSGSceneManagerRedirector.Interface != null)
+                CSGSceneManagerRedirector.Interface.OnDestroyed(this);
+        }
 
-		// Unity bug workaround
-		private void Update()
-		{
-			// we need to kill a dangling "generated-meshes" when deleting prefab instance in scene
-			if (owner)
-				return;
+        // Unity bug workaround
+        private void Update()
+        {
+            // we need to kill a dangling "generated-meshes" when deleting prefab instance in scene
+            if (owner)
+                return;
 
             GameObjectExtensions.Destroy(this.gameObject);
-		}
+        }
 #else
         void Awake()
-		{
-			//this.hideFlags = HideFlags.DontSaveInBuild;
-			this.gameObject.tag = "EditorOnly"; 
-		}
+        {
+            //this.hideFlags = HideFlags.DontSaveInBuild;
+            this.gameObject.tag = "EditorOnly";
+        }
 #endif
-	}
+    }
 }

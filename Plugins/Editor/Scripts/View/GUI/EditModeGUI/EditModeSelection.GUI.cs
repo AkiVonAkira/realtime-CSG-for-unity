@@ -35,33 +35,11 @@ namespace RealtimeCSG
             return editModeBounds.height;
         }
 
-        static GUIStyle sceneViewOverlayTransparentBackground;
+        static GUIStyle sceneViewOverlayTransparentBackground =
+            "SceneViewOverlayTransparentBackground";
         static GUI.WindowFunction windowFunction = new GUI.WindowFunction(
             EditModeSelectionGUI.HandleSceneGUI
         );
-
-        internal static void ResetCachedGuiStyles()
-        {
-            sceneViewOverlayTransparentBackground = null;
-        }
-
-        static GUIStyle SceneViewOverlayTransparentBackground
-        {
-            get
-            {
-                if (Event.current == null)
-                    return GUIStyle.none;
-
-                if (sceneViewOverlayTransparentBackground == null)
-                {
-                    var found = GUI.skin.FindStyle("SceneViewOverlayTransparentBackground");
-                    sceneViewOverlayTransparentBackground =
-                        found != null ? new GUIStyle(found) : new GUIStyle(EditorStyles.helpBox);
-                }
-
-                return sceneViewOverlayTransparentBackground;
-            }
-        }
 
         public static void HandleWindowGUI(Rect windowRect)
         {
@@ -70,7 +48,7 @@ namespace RealtimeCSG
                 windowRect,
                 windowFunction,
                 string.Empty,
-                SceneViewOverlayTransparentBackground,
+                sceneViewOverlayTransparentBackground,
                 CSG_GUIStyleUtility.ContentEmpty
             );
         }
@@ -204,7 +182,7 @@ namespace RealtimeCSG
                     buttonArea.y = 2;
                     buttonArea.height = 13;
                     buttonArea.width = 13;
-                    if (GUI.Button(buttonArea, GUIContent.none, CSG_GUIStyleUtility.winBtnClose))
+                    if (GUI.Button(buttonArea, GUIContent.none, "ToolbarSearchCancelButton"))
                         EditModeToolWindowSceneGUI.GetWindow();
                     TooltipUtility.SetToolTip(CSG_GUIStyleUtility.PopOutTooltip, buttonArea);
 

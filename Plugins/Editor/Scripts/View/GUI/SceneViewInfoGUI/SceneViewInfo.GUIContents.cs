@@ -6,45 +6,35 @@ Description:
 Handles styles for SceneViewInfoGUI
 * * * * * * * * * * * * * * * * * * * * * */
 
-
 using UnityEditor;
 using UnityEngine;
-
 
 namespace RealtimeCSG
 {
     internal sealed partial class SceneViewInfoGUI
     {
-        private static readonly Color infoGUITextColor = new Color32( 160, 160, 160, 255 );
+        private static readonly Color infoGUITextColor = new Color32(160, 160, 160, 255);
 
-        private static Rect      infoGUIRect;
-        private static GUIStyle  infoGUIStyle;
-        private static GUIStyle  infoGUIBGStyle;
-        private static bool      infoStylesInitialized;
-        private const  float     infoGUILabelHeight = 34;
+        private static Rect infoGUIRect;
+        private static GUIStyle infoGUIStyle;
+        private static GUIStyle infoGUIBGStyle;
+        private const float infoGUILabelHeight = 34;
         private static Texture2D m_InfoGUIBGTex;
-
-        internal static void ResetCachedGuiStyles()
-        {
-            infoStylesInitialized = false;
-            infoGUIStyle = null;
-            infoGUIBGStyle = null;
-        }
 
         private static Texture2D InfoGUIBGTex
         {
             get
             {
-                if( m_InfoGUIBGTex == null )
-                    m_InfoGUIBGTex = Resources.Load<Texture2D>( "GUI/infobg_blk" );
+                if (m_InfoGUIBGTex == null)
+                    m_InfoGUIBGTex = Resources.Load<Texture2D>("GUI/infobg_blk");
 
                 return m_InfoGUIBGTex;
             }
         }
 
-        private static void InitStyles( SceneView sceneView )
+        private static void InitStyles(SceneView sceneView)
         {
-            if ( Event.current == null )
+            if (Event.current == null)
                 return;
 
 #if UNITY_2018_3_OR_NEWER
@@ -55,33 +45,25 @@ namespace RealtimeCSG
             infoGUIRect.y = sceneView.position.height - 74;
 #endif
 
-            infoGUIRect.width  = 110;
+            infoGUIRect.width = 110;
             infoGUIRect.height = infoGUILabelHeight;
 
-            if ( infoStylesInitialized )
+            if (infoGUIStyle != null)
                 return;
 
-            infoGUIStyle = new GUIStyle( EditorStyles.miniLabel )
+            infoGUIStyle = new GUIStyle(EditorStyles.miniLabel)
             {
                 alignment = TextAnchor.UpperLeft,
-                normal = new GUIStyleState()
-                {
-                    textColor = infoGUITextColor
-                },
-                margin   = new RectOffset( 0, 0, 0, 0 ),
-                padding  = new RectOffset( 0, 0, 0, 0 ),
-                fontSize = 11
+                normal = new GUIStyleState() { textColor = infoGUITextColor },
+                margin = new RectOffset(0, 0, 0, 0),
+                padding = new RectOffset(0, 0, 0, 0),
+                fontSize = 11,
             };
 
-            infoGUIBGStyle = new GUIStyle( EditorStyles.helpBox )
+            infoGUIBGStyle = new GUIStyle(EditorStyles.helpBox)
             {
-                normal = new GUIStyleState()
-                {
-                    background = InfoGUIBGTex
-                }
+                normal = new GUIStyleState() { background = InfoGUIBGTex },
             };
-
-            infoStylesInitialized = true;
         }
     }
 }

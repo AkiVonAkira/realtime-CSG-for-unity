@@ -94,8 +94,6 @@ namespace RealtimeCSG
 
         public static GUIStyle unpaddedWindow;
 
-        public static GUIStyle winBtnClose;
-
         public static GUILayoutOption[] ContentEmpty = new GUILayoutOption[0];
 
         public static ToolTip PopOutTooltip = new ToolTip(
@@ -354,9 +352,6 @@ namespace RealtimeCSG
             if (stylesInitialized)
                 return;
 
-            if (Event.current == null)
-                return;
-
             var oldSkin = GUI.skin;
             stylesInitialized = true;
             SetDefaultGUISkin();
@@ -406,8 +401,6 @@ namespace RealtimeCSG
             );
 
             selectionRectStyle = GetStyle("selectionRect");
-
-            winBtnClose = CreateWinBtnCloseStyle();
 
             var redToolbarDropDown = GetStyle("toolbarDropDown");
 
@@ -749,9 +742,6 @@ namespace RealtimeCSG
 
         public static void SetDefaultGUISkin()
         {
-            if (Event.current == null)
-                return;
-
             if (EditorGUIUtility.isProSkin)
                 GUI.skin = EditorGUIUtility.GetBuiltinSkin(EditorSkin.Scene);
             else
@@ -772,9 +762,6 @@ namespace RealtimeCSG
 
         public static GUIStyle GetStyle(string styleName)
         {
-            if (Event.current == null)
-                return GUIStyle.none;
-
             GUIStyle s = GUI.skin.FindStyle(styleName);
             if (s == null)
             {
@@ -784,64 +771,6 @@ namespace RealtimeCSG
                 GUI.skin = oldSkin;
             }
             return s;
-        }
-
-        static GUIStyle CreateWinBtnCloseStyle()
-        {
-            GUIStyle basis = GetStyle("ToolbarSearchCancelButton");
-            if (basis == null || basis == GUIStyle.none)
-                basis = GetStyle("ButtonRight");
-            if (basis == null || basis == GUIStyle.none)
-                basis = EditorStyles.toolbarButton;
-
-            var style = new GUIStyle(basis);
-            var closeIcon = Resources.Load<Texture2D>("GUI/WinBtnClose");
-            if (closeIcon != null)
-                style.normal.background = closeIcon;
-            style.onActive.background =
-                style.onFocused.background =
-                style.onNormal.background =
-                style.onHover.background =
-                style.hover.background =
-                style.focused.background =
-                style.active.background =
-                    null;
-            style.fixedHeight = 16f;
-            style.fixedWidth = 16f;
-            style.overflow.bottom = 0;
-            style.overflow.top = 0;
-            style.overflow.right = 0;
-            style.overflow.left = 0;
-            return style;
-        }
-
-        public static void ResetCachedStyles()
-        {
-            stylesInitialized = false;
-
-            BottomToolBarStyle = null;
-            emptyMaterialStyle = null;
-            unselectedIconLabelStyle = null;
-            selectedIconLabelStyle = null;
-            selectionRectStyle = null;
-            redTextArea = null;
-            redTextLabel = null;
-            redButton = null;
-            wrapLabel = null;
-            versionLabelStyle = null;
-            toolTipTitleStyle = null;
-            toolTipContentsStyle = null;
-            toolTipKeycodesStyle = null;
-            sceneTextLabel = null;
-            rightAlignedLabel = null;
-            unpaddedWindow = null;
-            winBtnClose = null;
-            brushEditModeContent = null;
-            brushEditModeTooltips = null;
-
-            Pro = new CSG_Skin();
-            Personal = new CSG_Skin();
-            _savedGuiSkin = null;
         }
     }
 }

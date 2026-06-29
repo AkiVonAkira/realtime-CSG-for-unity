@@ -323,9 +323,11 @@ namespace RealtimeCSG
         public static Vector3 DefaultMoveOffset = Vector3.zero;
         public static Vector3 DefaultRotateOffset = Vector3.zero;
 
+#if !UNITY_6000_3_OR_NEWER
         static System.Type UnitySnapType = null;
         static System.Reflection.PropertyInfo UnitySnapTypeMoveProperty = null;
         static System.Reflection.PropertyInfo UnitySnapTypeRotateProperty = null;
+#endif
 
         public static bool EnableRealtimeCSG = true;
 
@@ -370,9 +372,7 @@ namespace RealtimeCSG
             EditorSnapSettings.move = moveSnapVector;
             EditorSnapSettings.rotate = rotationSnap;
             EditorSnapSettings.scale = scaleSnap;
-            return;
-#endif
-
+#else
             List<System.Type> types = null;
 
             // ... but unfortunately Unity also caches it internally
@@ -421,6 +421,7 @@ namespace RealtimeCSG
                 if (UnitySnapTypeRotateProperty != null)
                     UnitySnapTypeRotateProperty.SetValue(UnitySnapType, rotationSnap, null);
             }
+#endif
         }
         #endregion
 
@@ -531,7 +532,7 @@ namespace RealtimeCSG
                 bool found_all = true;
                 for (int j = 0; j < sceneViews.Count; j++)
                 {
-                    if (!ArrayUtility.Contains(ids, sceneViews[j].GetInstanceID()))
+                    if (!ArrayUtility.Contains(ids, sceneViews[j].ToNativeId()))
                     {
                         found_all = false;
                         break;
@@ -559,14 +560,14 @@ namespace RealtimeCSG
                             ArrayUtility.RemoveAt(ref wireframeInstanceIDs, j);
                             continue;
                         }
-                        wireframeInstanceIDs[j] = sceneViews[j].GetInstanceID();
+                        wireframeInstanceIDs[j] = sceneViews[j].ToNativeId();
                     }
                 }
             }
 
             for (int i = 0; i < sceneViews.Count; i++)
             {
-                if (ArrayUtility.Contains(wireframeInstanceIDs, sceneViews[i].GetInstanceID()))
+                if (ArrayUtility.Contains(wireframeInstanceIDs, sceneViews[i].ToNativeId()))
                 {
                     wireframeSceneviews.Add(sceneViews[i].name);
                 }
