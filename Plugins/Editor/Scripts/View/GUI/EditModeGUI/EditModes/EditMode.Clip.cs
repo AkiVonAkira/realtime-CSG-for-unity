@@ -1206,7 +1206,15 @@ namespace RealtimeCSG
                     sceneView.position.width,
                     sceneView.position.height - CSG_GUIStyleUtility.BottomToolBarHeight
                 );
-                if (currentCursor != MouseCursor.Arrow)
+                if (
+                    currentCursor != MouseCursor.Arrow
+#if UNITY_2020_2_OR_NEWER
+                    && !Tools.viewToolActive
+#endif
+                    && !Event.current.alt
+                    && Event.current.button != 1
+                    && Event.current.button != 2
+                )
                     EditorGUIUtility.AddCursorRect(windowRect, currentCursor);
             }
 

@@ -1896,7 +1896,12 @@ namespace RealtimeCSG
                         if (sceneView)
                         {
 #if UNITY_2020_2_OR_NEWER
-                            if (!Tools.viewToolActive)
+                            if (
+                                !Tools.viewToolActive
+                                && !Event.current.alt
+                                && Event.current.button != 1
+                                && Event.current.button != 2
+                            )
 #else
                             if (
                                 Tools.current != Tool.View
