@@ -1845,7 +1845,6 @@ namespace RealtimeCSG
             var originalEventType = Event.current.type;
             if (originalEventType == EventType.MouseMove)
             {
-                mouseIsDragging = false;
                 draggingOnCamera = null;
                 realMousePosition = Event.current.mousePosition;
             }
@@ -2704,16 +2703,10 @@ namespace RealtimeCSG
                     {
                         if (Event.current.button != 0)
                             break;
-                        if (!mouseIsDragging) // && GUIUtility.hotControl == 0)
-                        { /*
-							if (hoverOnTarget != -1 &&
-								hoverOnBoundsCenter != -1 &&
-								hoverOnBoundsEdge != -1)*/
-                            {
-                                SelectionUtility.DoSelectionClick(sceneView);
-                                // We're doing manual selection, make sure to eat the event otherwise unity will run its own MouseUp for selection logic
+                        if (!mouseIsDragging && sceneRect.Contains(Event.current.mousePosition))
+                        {
+                            if (SelectionUtility.DoSelectionClick(sceneView))
                                 Event.current.Use();
-                            }
                         }
                         mouseIsDragging = false;
                         break;

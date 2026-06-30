@@ -802,10 +802,9 @@ namespace RealtimeCSG
 
         public virtual void HandleEvents(SceneView sceneView, Rect sceneRect)
         {
-            if (
-                Event.current.type == EventType.MouseDown
-                || Event.current.type == EventType.MouseMove
-            )
+            if (Event.current.type == EventType.MouseDown)
+                mouseIsDragging = false;
+            else if (Event.current.type == EventType.MouseUp)
                 mouseIsDragging = false;
             else if (Event.current.type == EventType.MouseDrag)
                 mouseIsDragging = true;

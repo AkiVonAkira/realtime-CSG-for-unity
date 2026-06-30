@@ -455,11 +455,31 @@ namespace RealtimeCSG
         }
 
         #region DoSelectionClick
-        public static void DoSelectionClick(
+        internal static bool CanHandleSceneClick()
+        {
+#if UNITY_2020_2_OR_NEWER
+            if (Tools.viewToolActive)
+                return false;
+#endif
+            if (Event.current == null)
+                return false;
+            if (Event.current.alt)
+                return false;
+            if (Event.current.button != 0)
+                return false;
+            if (GUIUtility.hotControl != 0)
+                return false;
+            return true;
+        }
+
+        public static bool DoSelectionClick(
             SceneView sceneView,
             bool ignoreInvisibleSurfaces = true
         )
         {
+            if (!CanHandleSceneClick())
+                return false;
+
             var camera = sceneView.camera;
             GameObject gameobject;
             SceneQueryUtility.FindClickWorldIntersection(
@@ -513,7 +533,7 @@ namespace RealtimeCSG
                 {
                     selectedObjectsOnClick.Remove(gameobject.Id());
                     SelectionIdExtensions.SetEntityIds(selectedObjectsOnClick.ToArray());
-                    return;
+                    return true;
                 }
             }
             else
@@ -545,10 +565,12 @@ namespace RealtimeCSG
                         brush.ChildData == null
                         || !ModelTraits.IsModelEditable(brush.ChildData.Model)
                     )
-                        return;
+                        return true;
                     SelectionUtility.LastUsedModel = brush.ChildData.Model;
                 }
             }
+
+            return true;
         }
         #endregion
 
