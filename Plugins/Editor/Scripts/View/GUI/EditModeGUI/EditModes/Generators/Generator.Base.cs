@@ -804,23 +804,18 @@ namespace RealtimeCSG
         {
             if (Event.current.type == EventType.MouseDown)
                 mouseIsDragging = false;
-            else if (Event.current.type == EventType.MouseUp)
-                mouseIsDragging = false;
             else if (Event.current.type == EventType.MouseDrag)
                 mouseIsDragging = true;
+#if UNITY_2020_2_OR_NEWER
+            else if (Event.current.type == EventType.MouseMove && Tools.viewToolActive)
+                mouseIsDragging = false;
+#endif
 
             CreateControlIDs();
 
             //if (mouseIsDragging ||
             //	(Event.current.type == EventType.MouseDown && Tools.viewTool == ViewTool.Orbit))
             //	HandleCameraOrbit(sceneView, editMode != EditMode.CreateShape && editMode != EditMode.CreatePlane);
-
-            // pretend we dragged so we don't click if we just changed edit modes
-            if (prevEditMode != editMode)
-            {
-                prevEditMode = editMode;
-                mouseIsDragging = true;
-            }
 
             switch (editMode)
             {
@@ -834,6 +829,13 @@ namespace RealtimeCSG
                 case EditMode.EditShape:
                     HandleEditShapeEvents(sceneView, sceneRect);
                     break;
+            }
+
+            // pretend we dragged so we don't click if we just changed edit modes
+            if (prevEditMode != editMode)
+            {
+                prevEditMode = editMode;
+                mouseIsDragging = true;
             }
         }
 
