@@ -394,7 +394,8 @@ namespace RealtimeCSG
             //if (Event.current.type == EventType.Layout)
             {
                 shapeEditId = GUIUtility.GetControlID(shapeEditIDHash, FocusType.Passive);
-                HandleUtility.AddDefaultControl(shapeEditId);
+                if (!SelectionUtility.ShouldSkipSceneControlCapture())
+                    HandleUtility.AddDefaultControl(shapeEditId);
 
                 shapeId = GUIUtility.GetControlID(ShapeBuilderShapeHash, FocusType.Passive);
             }

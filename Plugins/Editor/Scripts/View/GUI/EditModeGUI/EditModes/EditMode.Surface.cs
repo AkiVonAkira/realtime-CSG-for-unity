@@ -1479,6 +1479,9 @@ namespace RealtimeCSG
                     {
                         UpdateMouseCursor();
 
+                        if (SelectionUtility.ShouldSkipSceneControlCapture())
+                            break;
+
                         if (
                             currentControl != -1
                             || camera == null

@@ -1465,7 +1465,8 @@ namespace RealtimeCSG
                         sceneView.position.width,
                         sceneView.position.height - CSG_GUIStyleUtility.BottomToolBarHeight
                     );
-                    EditorGUIUtility.AddCursorRect(windowRect, _currentCursor);
+                    if (_currentCursor != MouseCursor.Arrow)
+                        EditorGUIUtility.AddCursorRect(windowRect, _currentCursor);
                 }
             }
 
@@ -1800,7 +1801,8 @@ namespace RealtimeCSG
                 MeshEditBrushToolHash,
                 FocusType.Keyboard
             );
-            HandleUtility.AddDefaultControl(_meshEditBrushToolId);
+            if (!SelectionUtility.ShouldSkipSceneControlCapture())
+                HandleUtility.AddDefaultControl(_meshEditBrushToolId);
 
             _rectSelectionId = GUIUtility.GetControlID(RectSelectionHash, FocusType.Keyboard);
             _chamferId = GUIUtility.GetControlID(meshEdgeChamferHash, FocusType.Keyboard);
@@ -3168,6 +3170,8 @@ namespace RealtimeCSG
                         {
                             break;
                         }
+                        if (SelectionUtility.ShouldSkipSceneControlCapture())
+                            break;
 
                         Matrix4x4 origMatrix = Handles.matrix;
                         Handles.matrix = MathConstants.identityMatrix;

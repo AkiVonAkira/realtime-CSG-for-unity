@@ -1918,7 +1918,8 @@ namespace RealtimeCSG
                                     sceneView.position.height
                                         - CSG_GUIStyleUtility.BottomToolBarHeight
                                 );
-                                EditorGUIUtility.AddCursorRect(windowRect, currentCursor);
+                                if (currentCursor != MouseCursor.Arrow)
+                                    EditorGUIUtility.AddCursorRect(windowRect, currentCursor);
                             }
                         }
 
@@ -2724,6 +2725,9 @@ namespace RealtimeCSG
                         {
                             if (inCamera && !mouseIsDragging && GUIUtility.hotControl == 0)
                             {
+                                if (SelectionUtility.ShouldSkipSceneControlCapture())
+                                    break;
+
                                 //var forward = camera.transform.forward.normalized;
                                 //var view_is_2D = camera.orthographic &&
                                 //				 (

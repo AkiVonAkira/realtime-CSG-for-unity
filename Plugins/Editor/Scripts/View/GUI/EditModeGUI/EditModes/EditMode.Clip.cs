@@ -1132,7 +1132,8 @@ namespace RealtimeCSG
                 clipEditBrushToolHash,
                 FocusType.Passive
             );
-            HandleUtility.AddDefaultControl(meshEditBrushToolID);
+            if (!SelectionUtility.ShouldSkipSceneControlCapture())
+                HandleUtility.AddDefaultControl(meshEditBrushToolID);
             planeCreationID = GUIUtility.GetControlID(planeCreationHash, FocusType.Keyboard);
         }
 

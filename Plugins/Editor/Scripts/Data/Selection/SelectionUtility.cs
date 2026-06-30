@@ -455,6 +455,22 @@ namespace RealtimeCSG
         }
 
         #region DoSelectionClick
+        internal static bool ShouldSkipSceneControlCapture()
+        {
+#if UNITY_2020_2_OR_NEWER
+            if (Tools.viewToolActive)
+                return true;
+#endif
+            if (Event.current == null)
+                return false;
+            if (Event.current.alt)
+                return true;
+            // Layout before MouseDown carries the button about to be pressed.
+            if (Event.current.button == 1 || Event.current.button == 2)
+                return true;
+            return false;
+        }
+
         internal static bool CanHandleSceneClick()
         {
 #if UNITY_2020_2_OR_NEWER
